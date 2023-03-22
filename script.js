@@ -86,15 +86,13 @@ const handleSubmit = async (e) => {
 
   loader(messageDiv);
 
+  const formData = new FormData();
+  formData.append("prompt", data.get("prompt"));
+
   // fetch data from server -> bot's response
-  const response = await fetch("http://localhost:5000", {
+  const response = await fetch("http://localhost:5000/mad", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      prompt: data.get("prompt"),
-    }),
+    body: formData,
   });
 
   clearInterval(loadInterval);
@@ -102,7 +100,7 @@ const handleSubmit = async (e) => {
 
   if (response.ok) {
     const data = await response.json();
-    const parsedData = data.bot.trim();
+    const parsedData = data.answer.trim();
 
     typeText(messageDiv, "Bot: " + parsedData);
   } else {
